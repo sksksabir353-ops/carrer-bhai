@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Career Bhai – Your Career Guidance Partner</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --primary: #5b21b6;
+    --primary-light: #7c3aed;
+    --accent: #f97316;
+    --accent2: #10b981;
+    --bg: #0f0a1e;
+    --surface: #1a1035;
+    --surface2: #231548;
+    --card: #1e1340;
+    --text: #f3f0ff;
+    --muted: #a89ec9;
+    --border: rgba(124,58,237,0.25);
+    --glow: rgba(124,58,237,0.35);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ──── SPLASH ──── */
+  #splash {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  #splash.hide { opacity:0; transform:scale(1.05); pointer-events:none; }
+  .splash-logo {
+    width: 110px; height: 110px;
+    background: linear-gradient(135deg,#7c3aed,#f97316);
+    border-radius: 30px;
+    display: flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',cursive;
+    font-size: 2.8rem; font-weight:800;
+    color:#fff;
+    box-shadow: 0 0 50px rgba(124,58,237,0.6);
+    animation: pulse 1.5s ease-in-out infinite;
+    margin-bottom: 1.5rem;
+  }
+  .splash-name { font-family:'Baloo 2',cursive; font-size:2.2rem; font-weight:800; background:linear-gradient(90deg,#a78bfa,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .splash-tag { color:var(--muted); font-size:1rem; margin-top:0.4rem; }
+  .splash-bar { width:200px; height:4px; background:var(--surface2); border-radius:99px; margin-top:2rem; overflow:hidden; }
+  .splash-fill { height:100%; background:linear-gradient(90deg,#7c3aed,#f97316); border-radius:99px; animation: load 2s ease forwards; }
+  @keyframes load { from{width:0} to{width:100%} }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 40px rgba(124,58,237,0.6)} 50%{box-shadow:0 0 70px rgba(249,115,22,0.7)} }
+
+  /* ──── NAV ──── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(15,10,30,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 1.5rem;
+    display: flex; align-items:center; justify-content:space-between;
+  }
+  .nav-logo { display:flex; align-items:center; gap:0.7rem; cursor:pointer; }
+  .nav-icon {
+    width:42px; height:42px;
+    background:linear-gradient(135deg,#7c3aed,#f97316);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',cursive; font-weight:800; font-size:1.1rem; color:#fff;
+  }
+  .nav-title { font-family:'Baloo 2',cursive; font-weight:800; font-size:1.3rem; background:linear-gradient(90deg,#a78bfa,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-links { display:flex; gap:0.3rem; }
+  .nav-links a {
+    color:var(--muted); text-decoration:none; font-size:0.9rem; font-weight:600;
+    padding:0.5rem 0.9rem; border-radius:10px; transition:0.2s; cursor:pointer;
+  }
+  .nav-links a:hover, .nav-links a.active { color:#fff; background:var(--surface2); }
+  .nav-cta {
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+    color:#fff; border:none; padding:0.55rem 1.2rem; border-radius:12px;
+    font-weight:700; font-size:0.9rem; cursor:pointer;
+    box-shadow:0 4px 15px var(--glow); transition:0.2s;
+  }
+  .nav-cta:hover { transform:translateY(-2px); box-shadow:0 6px 20px var(--glow); }
+  .hamburger { display:none; background:none; border:none; cursor:pointer; color:#fff; font-size:1.5rem; }
+  .mobile-menu {
+    display:none; position:fixed; inset:0; background:rgba(15,10,30,0.97);
+    z-index:200; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem;
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { color:#fff; text-decoration:none; font-size:1.5rem; font-weight:700; font-family:'Baloo 2',cursive; }
+  .mob-close { position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; }
+
+  /* ──── PAGES ──── */
+  .page { display:none; padding-top:70px; min-height:100vh; }
+  .page.active { display:block; }
+
+  /* ──── HOME ──── */
+  .hero {
+    min-height: calc(100vh - 70px);
+    display: flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:2rem 1.5rem;
+    position:relative; overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,58,237,0.3) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 60%, rgba(249,115,22,0.15) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .hero-badge {
+    background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.5);
+    padding:0.4rem 1rem; border-radius:99px; font-size:0.85rem; font-weight:700;
+    color:#c4b5fd; margin-bottom:1.5rem; display:inline-block;
+    animation: fadeUp 0.6s ease;
+  }
+  .hero h1 {
+    font-family:'Baloo 2',cursive; font-weight:800;
+    font-size:clamp(2.2rem,6vw,4rem); line-height:1.15;
+    margin-bottom:1rem; animation:fadeUp 0.8s ease;
+  }
+  .hero h1 span { background:linear-gradient(90deg,#a78bfa,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { font-size:1.1rem; color:var(--muted); max-width:580px; line-height:1.7; margin:0 auto 2rem; animation:fadeUp 1s ease; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; animation:fadeUp 1.2s ease; }
+  .btn-primary {
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+    color:#fff; border:none; padding:0.85rem 2rem; border-radius:14px;
+    font-weight:700; font-size:1rem; cursor:pointer;
+    box-shadow:0 6px 25px var(--glow); transition:0.3s;
+  }
+  .btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 35px var(--glow); }
+  .btn-outline {
+    background:transparent; color:#a78bfa; border:2px solid rgba(124,58,237,0.5);
+    padding:0.85rem 2rem; border-radius:14px; font-weight:700; font-size:1rem; cursor:pointer; transition:0.3s;
+  }
+  .btn-outline:hover { background:rgba(124,58,237,0.15); border-color:#7c3aed; }
+
+  .stats-bar {
+    display:flex; gap:2rem; flex-wrap:wrap; justify-content:center;
+    margin-top:4rem; animation:fadeUp 1.4s ease;
+  }
+  .stat { text-align:center; }
+  .stat-num { font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800; color:#fff; }
+  .stat-num span { background:linear-gradient(90deg,#a78bfa,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-label { font-size:0.85rem; color:var(--muted); font-weight:600; }
+
+  /* Feature Cards */
+  .section { padding:4rem 1.5rem; max-width:1100px; margin:0 auto; }
+  .section-title { font-family:'Baloo 2',cursive; font-weight:800; font-size:2rem; text-align:center; margin-bottom:0.5rem; }
+  .section-sub { color:var(--muted); text-align:center; margin-bottom:3rem; font-size:0.95rem; }
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .card {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:1.8rem; transition:0.3s; cursor:pointer; position:relative; overflow:hidden;
+  }
+  .card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent); opacity:0; transition:0.3s; }
+  .card:hover { transform:translateY(-5px); border-color:rgba(124,58,237,0.5); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+  .card:hover::before { opacity:1; }
+  .card-icon { font-size:2.5rem; margin-bottom:1rem; }
+  .card-title { font-family:'Baloo 2',cursive; font-weight:700; font-size:1.2rem; margin-bottom:0.5rem; }
+  .card-desc { color:var(--muted); font-size:0.9rem; line-height:1.6; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(25px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ──── CAREER EXPLORER ──── */
+  .career-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
+  .career-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:1.2rem; cursor:pointer; transition:0.25s; text-align:center;
+  }
+  .career-card:hover { transform:translateY(-4px); border-color:var(--accent); box-shadow:0 8px 20px rgba(249,115,22,0.15); }
+  .career-card.selected { border-color:#7c3aed; background:rgba(124,58,237,0.15); }
+  .career-card .icon { font-size:2rem; margin-bottom:0.5rem; }
+  .career-card .name { font-weight:700; font-size:0.9rem; }
+  .career-card .tag { font-size:0.75rem; color:var(--muted); margin-top:0.2rem; }
+
+  .career-detail {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:2rem; margin-top:2rem; display:none;
+  }
+  .career-detail.show { display:block; animation:fadeUp 0.5s ease; }
+  .detail-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .detail-icon { font-size:3rem; }
+  .detail-title { font-family:'Baloo 2',cursive; font-weight:800; font-size:1.8rem; }
+  .detail-sub { color:var(--muted); font-size:0.9rem; }
+  .detail-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+  .detail-item { background:var(--surface2); border-radius:12px; padding:1rem; }
+  .detail-item-label { font-size:0.75rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
+  .detail-item-value { font-weight:700; font-size:1rem; color:#a78bfa; }
+  .roadmap { margin-top:1rem; }
+  .roadmap-title { font-weight:700; margin-bottom:0.8rem; color:#c4b5fd; }
+  .roadmap-steps { display:flex; flex-direction:column; gap:0.5rem; }
+  .roadmap-step {
+    display:flex; align-items:center; gap:1rem;
+    background:var(--surface); border-radius:12px; padding:0.8rem 1rem;
+    border-left:3px solid #7c3aed;
+  }
+  .step-num {
+    width:28px; height:28px; border-radius:50%;
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.8rem; font-weight:700; flex-shrink:0;
+  }
+
+  /* ──── SKILLS QUIZ ──── */
+  .quiz-wrap { max-width:680px; margin:0 auto; }
+  .quiz-progress { height:6px; background:var(--surface2); border-radius:99px; margin-bottom:2rem; overflow:hidden; }
+  .quiz-bar { height:100%; background:linear-gradient(90deg,#7c3aed,#f97316); border-radius:99px; transition:width 0.4s; }
+  .quiz-q { font-family:'Baloo 2',cursive; font-weight:700; font-size:1.3rem; margin-bottom:1.5rem; }
+  .quiz-options { display:grid; gap:0.8rem; }
+  .quiz-opt {
+    background:var(--card); border:2px solid var(--border); border-radius:14px;
+    padding:1rem 1.3rem; cursor:pointer; transition:0.2s; font-weight:600;
+    text-align:left;
+  }
+  .quiz-opt:hover { border-color:#7c3aed; background:rgba(124,58,237,0.1); }
+  .quiz-opt.selected { border-color:#a855f7; background:rgba(124,58,237,0.2); color:#c4b5fd; }
+  .quiz-nav { display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; }
+  .quiz-result { display:none; text-align:center; }
+  .quiz-result.show { display:block; animation:fadeUp 0.5s ease; }
+  .result-icon { font-size:4rem; margin-bottom:1rem; }
+  .result-title { font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800; color:#a78bfa; margin-bottom:0.5rem; }
+  .result-desc { color:var(--muted); line-height:1.7; margin-bottom:1.5rem; }
+  .result-tags { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; margin-bottom:1.5rem; }
+  .result-tag { background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); padding:0.35rem 0.9rem; border-radius:99px; font-size:0.85rem; color:#c4b5fd; font-weight:600; }
+
+  /* ──── RESOURCES ──── */
+  .resource-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+  .tab-btn {
+    background:var(--surface2); border:1px solid var(--border); color:var(--muted);
+    padding:0.5rem 1.2rem; border-radius:10px; cursor:pointer; transition:0.2s; font-weight:600; font-size:0.9rem;
+  }
+  .tab-btn.active { background:linear-gradient(135deg,#7c3aed,#a855f7); border-color:transparent; color:#fff; }
+  .resource-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.2rem; }
+  .resource-item {
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:1.2rem; display:flex; gap:1rem; align-items:flex-start; transition:0.2s;
+  }
+  .resource-item:hover { border-color:rgba(124,58,237,0.5); transform:translateY(-2px); }
+  .resource-ico { font-size:1.8rem; flex-shrink:0; }
+  .resource-name { font-weight:700; font-size:0.95rem; margin-bottom:0.3rem; }
+  .resource-meta { color:var(--muted); font-size:0.82rem; }
+  .resource-badge { display:inline-block; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); padding:0.15rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:700; margin-top:0.4rem; }
+
+  /* ──── COUNSELING ──── */
+  .counselors-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.5rem; margin-bottom:3rem; }
+  .counselor-card {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:1.5rem; text-align:center; transition:0.3s;
+  }
+  .counselor-card:hover { transform:translateY(-4px); border-color:rgba(124,58,237,0.5); }
+  .counselor-avatar { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 0.8rem; border:3px solid rgba(124,58,237,0.4); }
+  .counselor-name { font-family:'Baloo 2',cursive; font-weight:700; font-size:1.1rem; margin-bottom:0.2rem; }
+  .counselor-role { color:var(--muted); font-size:0.85rem; margin-bottom:0.6rem; }
+  .counselor-tags { display:flex; flex-wrap:wrap; gap:0.4rem; justify-content:center; margin-bottom:1rem; }
+  .c-tag { background:rgba(124,58,237,0.15); color:#c4b5fd; border:1px solid rgba(124,58,237,0.3); padding:0.2rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600; }
+  .c-rating { color:#f97316; font-size:0.85rem; font-weight:700; }
+  .btn-book {
+    width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7);
+    color:#fff; border:none; padding:0.7rem; border-radius:12px;
+    font-weight:700; cursor:pointer; transition:0.2s; margin-top:0.8rem;
+  }
+  .btn-book:hover { transform:scale(1.02); }
+
+  /* ──── BOOKING FORM ──── */
+  .booking-form {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:2rem; max-width:600px; margin:0 auto; display:none;
+  }
+  .booking-form.show { display:block; animation:fadeUp 0.5s ease; }
+  .form-title { font-family:'Baloo 2',cursive; font-weight:800; font-size:1.5rem; margin-bottom:1.5rem; }
+  .form-group { margin-bottom:1rem; }
+  label { display:block; font-size:0.85rem; font-weight:700; color:var(--muted); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.04em; }
+  input, select, textarea {
+    width:100%; background:var(--surface2); border:1px solid var(--border); color:#fff;
+    padding:0.8rem 1rem; border-radius:12px; font-family:'Nunito',sans-serif; font-size:0.95rem;
+    outline:none; transition:0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,0.15); }
+  textarea { resize:vertical; min-height:90px; }
+  select option { background:#1a1035; }
+  .btn-submit {
+    width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7);
+    color:#fff; border:none; padding:1rem; border-radius:14px;
+    font-weight:800; font-size:1rem; cursor:pointer; margin-top:0.5rem; transition:0.2s;
+  }
+  .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 20px var(--glow); }
+
+  .success-msg {
+    background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.4);
+    border-radius:14px; padding:1.5rem; text-align:center; display:none; margin-top:1rem;
+  }
+  .success-msg.show { display:block; animation:fadeUp 0.5s ease; }
+  .success-msg .s-ico { font-size:2.5rem; }
+  .success-msg h3 { font-family:'Baloo 2',cursive; color:#10b981; margin:0.5rem 0 0.3rem; }
+  .success-msg p { color:var(--muted); font-size:0.9rem; }
+
+  /* ──── FOOTER ──── */
+  footer {
+    background:var(--surface); border-top:1px solid var(--border);
+    padding:2.5rem 1.5rem; text-align:center;
+  }
+  .footer-logo { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; background:linear-gradient(90deg,#a78bfa,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:0.4rem; }
+  .footer-tag { color:var(--muted); font-size:0.85rem; margin-bottom:1rem; }
+  .footer-links { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:0.2s; }
+  .footer-links a:hover { color:#a78bfa; }
+  .footer-copy { color:rgba(168,158,201,0.5); font-size:0.8rem; }
+
+  /* ──── MISC ──── */
+  .pill { display:inline-block; background:rgba(249,115,22,0.15); color:#fb923c; border:1px solid rgba(249,115,22,0.3); padding:0.25rem 0.75rem; border-radius:99px; font-size:0.8rem; font-weight:700; }
+  .divider { height:1px; background:var(--border); margin:3rem 0; }
+  .back-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:0.5rem 1rem; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; transition:0.2s; }
+  .back-btn:hover { color:#fff; border-color:rgba(124,58,237,0.5); }
+
+  @media(max-width:640px) {
+    .nav-links,.nav-cta { display:none; }
+    .hamburger { display:block; }
+    .stat-num { font-size:1.5rem; }
+    .stats-bar { gap:1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">CB</div>
+  <div class="splash-name">Career Bhai</div>
+  <div class="splash-tag">Aapka Career, Hamari Zimmedari 🚀</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="goTo('home')">
+    <div class="nav-icon">CB</div>
+    <span class="nav-title">Career Bhai</span>
+  </div>
+  <div class="nav-links">
+    <a onclick="goTo('home')" id="nav-home" class="active">Home</a>
+    <a onclick="goTo('explore')" id="nav-explore">Explore Careers</a>
+    <a onclick="goTo('quiz')" id="nav-quiz">Skills Quiz</a>
+    <a onclick="goTo('resources')" id="nav-resources">Resources</a>
+    <a onclick="goTo('counseling')" id="nav-counseling">Counseling</a>
+  </div>
+  <button class="nav-cta" onclick="goTo('counseling')">Book Session</button>
+  <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.add('open')">☰</button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mob-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">✕</button>
+  <a onclick="goTo('home');document.getElementById('mobileMenu').classList.remove('open')">🏠 Home</a>
+  <a onclick="goTo('explore');document.getElementById('mobileMenu').classList.remove('open')">🔭 Explore Careers</a>
+  <a onclick="goTo('quiz');document.getElementById('mobileMenu').classList.remove('open')">🧠 Skills Quiz</a>
+  <a onclick="goTo('resources');document.getElementById('mobileMenu').classList.remove('open')">📚 Resources</a>
+  <a onclick="goTo('counseling');document.getElementById('mobileMenu').classList.remove('open')">🎯 Counseling</a>
+</div>
+
+<!-- ════ HOME PAGE ════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-badge">🇮🇳 India's #1 Career Guidance Platform</div>
+    <h1>Apna Sahi Career<br/><span>Path Khojo!</span></h1>
+    <p>Expert career counseling, skill assessment, and guidance for students and professionals across India. Your dream career starts here!</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="goTo('quiz')">🧠 Take Free Quiz</button>
+      <button class="btn-outline" onclick="goTo('explore')">🔭 Explore Careers</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num"><span>50K+</span></div><div class="stat-label">Students Guided</div></div>
+      <div class="stat"><div class="stat-num"><span>200+</span></div><div class="stat-label">Career Paths</div></div>
+      <div class="stat"><div class="stat-num"><span>98%</span></div><div class="stat-label">Success Rate</div></div>
+      <div class="stat"><div class="stat-num"><span>500+</span></div><div class="stat-label">Expert Counselors</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Kya Milega Aapko? 🎁</div>
+    <div class="section-sub">Sabse behtareen career guidance tools ek jagah pe</div>
+    <div class="cards-grid">
+      <div class="card" onclick="goTo('quiz')">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Skills Assessment Quiz</div>
+        <div class="card-desc">15-minute quiz se jaano apni strengths, interests aur best-fit career. AI-powered analysis.</div>
+      </div>
+      <div class="card" onclick="goTo('explore')">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title">Career Explorer</div>
+        <div class="card-desc">200+ career paths explore karo — salary, required skills, job scope, aur roadmap ke saath.</div>
+      </div>
+      <div class="card" onclick="goTo('resources')">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Study Resources</div>
+        <div class="card-desc">Free courses, books, YouTube channels aur coaching centers ki curated list — Hindi & English mein.</div>
+      </div>
+      <div class="card" onclick="goTo('counseling')">
+        <div class="card-icon">👨‍💼</div>
+        <div class="card-title">Expert Counseling</div>
+        <div class="card-desc">Industry experts se 1-on-1 session book karo — free ya affordable rates pe. IIT/IIM alumni available!</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📄</div>
+        <div class="card-title">Resume Builder</div>
+        <div class="card-desc">ATS-friendly resume templates jo aapki profile ko standout banaye. Freshers ke liye perfect!</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Mock Interviews</div>
+        <div class="card-desc">Real interview questions, expert feedback, aur confidence building — campus se corporate tak.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Popular Career Fields 🌟</div>
+    <div class="section-sub">India mein sabse zyada demand wale careers</div>
+    <div class="career-grid" style="grid-template-columns:repeat(auto-fill,minmax(155px,1fr));">
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">💻</div><div class="name">Technology</div><div class="tag">Software, AI, Cloud</div></div>
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">🏥</div><div class="name">Healthcare</div><div class="tag">MBBS, Nursing, Pharma</div></div>
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">⚖️</div><div class="name">Law & Justice</div><div class="tag">Civil, Criminal, Corp</div></div>
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">📊</div><div class="name">Finance</div><div class="tag">CA, CFA, Banking</div></div>
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">🎨</div><div class="name">Creative Arts</div><div class="tag">Design, Film, Music</div></div>
+      <div class="career-card" onclick="goTo('explore')"><div class="icon">🏛️</div><div class="name">Government</div><div class="tag">UPSC, SSC, Banking</div></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Career Bhai</div>
+    <div class="footer-tag">Aapka Career, Hamari Zimmedari 🚀</div>
+    <div class="footer-links">
+      <a href="#">About Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+      <a href="#">Blog</a>
+    </div>
+    <div class="footer-copy">© 2025 Career Bhai. Made with ❤️ in India.</div>
+  </footer>
+</div>
+
+<!-- ════ EXPLORE PAGE ════ -->
+<div id="page-explore" class="page">
+  <div class="section">
+    <div class="section-title">Career Explorer 🗺️</div>
+    <div class="section-sub">Apni field choose karo aur poori jankari pao</div>
+    <div class="career-grid" id="careerGrid"></div>
+    <div class="career-detail" id="careerDetail">
+      <button class="back-btn" onclick="closeDetail()">← Back</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ QUIZ PAGE ════ -->
+<div id="page-quiz" class="page">
+  <div class="section">
+    <div class="section-title">Skills Assessment Quiz 🧠</div>
+    <div class="section-sub">10 questions, 5 minutes — apna best-fit career jaano</div>
+    <div class="quiz-wrap">
+      <div class="quiz-progress"><div class="quiz-bar" id="quizBar" style="width:0%"></div></div>
+      <div id="quizContainer"></div>
+      <div class="quiz-result" id="quizResult"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ RESOURCES PAGE ════ -->
+<div id="page-resources" class="page">
+  <div class="section">
+    <div class="section-title">Study Resources 📚</div>
+    <div class="section-sub">Free aur paid resources — sab ek jagah pe</div>
+    <div class="resource-tabs" id="resourceTabs"></div>
+    <div class="resource-list" id="resourceList"></div>
+  </div>
+</div>
+
+<!-- ════ COUNSELING PAGE ════ -->
+<div id="page-counseling" class="page">
+  <div class="section">
+    <div class="section-title">Expert Counselors 👨‍💼</div>
+    <div class="section-sub">IIT/IIM alumni aur industry veterans se guidance lo</div>
+    <div class="counselors-grid" id="counselorsGrid"></div>
+    <div class="booking-form" id="bookingForm">
+      <button class="back-btn" onclick="closeBooking()">← Back to Counselors</button>
+      <div class="form-title">📅 Session Book Karo</div>
+      <div class="form-group"><label>Full Name</label><input type="text" placeholder="Aapka naam" id="f-name"/></div>
+      <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+91 XXXXX XXXXX" id="f-phone"/></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="aap@example.com" id="f-email"/></div>
+      <div class="form-group">
+        <label>Current Status</label>
+        <select id="f-status">
+          <option value="">-- Select --</option>
+          <option>10th Student</option>
+          <option>12th Student</option>
+          <option>College Student (UG)</option>
+          <option>College Student (PG)</option>
+          <option>Working Professional</option>
+          <option>Career Change</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Preferred Date</label>
+        <input type="date" id="f-date"/>
+      </div>
+      <div class="form-group">
+        <label>Preferred Time</label>
+        <select id="f-time">
+          <option value="">-- Select Time --</option>
+          <option>9:00 AM – 10:00 AM</option>
+          <option>10:00 AM – 11:00 AM</option>
+          <option>11:00 AM – 12:00 PM</option>
+          <option>2:00 PM – 3:00 PM</option>
+          <option>3:00 PM – 4:00 PM</option>
+          <option>6:00 PM – 7:00 PM</option>
+          <option>7:00 PM – 8:00 PM</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Apni concern batao</label><textarea id="f-concern" placeholder="Koi specific question ya concern ho toh yahan likhein..."></textarea></div>
+      <button class="btn-submit" onclick="submitBooking()">🚀 Session Confirm Karo</button>
+      <div class="success-msg" id="successMsg">
+        <div class="s-ico">✅</div>
+        <h3>Booking Confirmed!</h3>
+        <p>Aapki booking successful ho gayi. Counselor 2 ghante mein WhatsApp pe contact karenge. Dhanyavaad! 🙏</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const careers = [
+  { icon:'💻', name:'Software Engineer', tag:'Tech', salary:'₹5L–₹40L', scope:'Very High', edu:'B.Tech/BCA/Bootcamp', years:'4 yrs',
+    desc:'Applications, websites, aur software banate hain. India ka fastest growing field.',
+    skills:['Programming (Python/Java/JS)','Data Structures','Problem Solving','Git & DevOps'],
+    steps:['10+2 PCM','B.Tech CS / BCA / Online Bootcamp','Internship + Projects','Placement / Job Applications','Senior → Lead → Architect'] },
+  { icon:'🏥', name:'Doctor (MBBS)', tag:'Medical', salary:'₹8L–₹50L+', scope:'High', edu:'MBBS + PG', years:'5.5 yrs+',
+    desc:'NEET crack karo, MBBS karo aur logo ki seva karo. Noble aur rewarding career.',
+    skills:['Biology & Chemistry','Patience & Empathy','Critical Thinking','Communication'],
+    steps:['10+2 PCB with 85%+','NEET UG crack karo','MBBS (5.5 years)','Internship (1 year)','MD/MS (Optional PG)'] },
+  { icon:'⚖️', name:'Lawyer', tag:'Law', salary:'₹4L–₹30L+', scope:'High', edu:'LLB / BA LLB', years:'3–5 yrs',
+    desc:'CLAT ya direct LLB se start karo. Corporate law mein package bahut acha hai.',
+    skills:['Logical Reasoning','Communication','Research','Debating'],
+    steps:['10+2 any stream','CLAT / LSAT exam','BA LLB (5yr) or LLB (3yr)','Internship at firm','Enroll Bar Council → Practice'] },
+  { icon:'📊', name:'Chartered Accountant', tag:'Finance', salary:'₹7L–₹30L+', scope:'High', edu:'CA Foundation→Final', years:'4–5 yrs',
+    desc:'ICAI ka CA course complete karo. Big 4 companies mein excellent packages milte hain.',
+    skills:['Accounting & Taxation','Audit','Finance & Law','Attention to Detail'],
+    steps:['12th Commerce/PCM','CA Foundation','CA Intermediate','3-year Articleship','CA Final Exam'] },
+  { icon:'🎨', name:'UX/UI Designer', tag:'Creative+Tech', salary:'₹4L–₹20L', scope:'Very High', edu:'Design degree / Online', years:'2–4 yrs',
+    desc:'Apps aur websites ko beautiful aur usable banate hain. Creativity + logic ka perfect mix.',
+    skills:['Figma / Adobe XD','Design Thinking','Prototyping','User Research'],
+    steps:['10+2 any stream','Design course / B.Des','Figma & Prototyping seekho','Portfolio banao (5+ projects)','Apply at startups/agencies'] },
+  { icon:'🏛️', name:'IAS Officer (UPSC)', tag:'Government', salary:'₹10L–₹20L+', scope:'High', edu:'Any Graduation', years:'Graduation + prep',
+    desc:'Country ki seva karo IAS/IPS/IFS ban ke. UPSC India ka toughest exam — planning zaroori.',
+    skills:['Current Affairs','Essay Writing','Analytical Thinking','Leadership'],
+    steps:['Any graduation complete karo','UPSC Syllabus samjho','Prelims (GS + CSAT)','Mains (9 papers)','Interview (Personality Test)'] },
+  { icon:'📈', name:'Data Scientist', tag:'Tech+Analytics', salary:'₹8L–₹40L', scope:'Very High', edu:'B.Tech/M.Sc Stats', years:'4 yrs',
+    desc:'Data se insights nikalna. AI/ML ka ek booming field — demand bahut zyada hai.',
+    skills:['Python & R','Machine Learning','SQL & Big Data','Statistics & Maths'],
+    steps:['10+2 Maths','B.Tech CS / M.Sc Statistics','Python, ML, SQL seekho','Kaggle competitions','Job → Sr. Data Scientist → Lead'] },
+  { icon:'✈️', name:'Pilot (Commercial)', tag:'Aviation', salary:'₹20L–₹80L+', scope:'Medium-High', edu:'12th PCM + CPL', years:'2–4 yrs',
+    desc:'DGCA approved flying school se CPL lo. IndiGo, Air India mein excellent opportunities.',
+    skills:['Physics & Maths','Spatial Awareness','Decision Making','English Fluency'],
+    steps:['12th PCM with 50%+','Medical clearance (Class 1)','Private Pilot License (PPL)','Commercial Pilot License (CPL)','Type Rating + Airline Job'] },
+  { icon:'🎬', name:'Content Creator', tag:'Digital Media', salary:'₹2L–₹1Cr+', scope:'Very High', edu:'Any / Self-taught', years:'Varies',
+    desc:'YouTube, Instagram, Podcasts — apna passion monetize karo. Patience aur consistency zaroori.',
+    skills:['Video Editing','Storytelling','SEO & Marketing','Personal Branding'],
+    steps:['Niche choose karo','Content plan banao','Regular posting start karo','SEO & analytics seekho','Monetization (AdSense, Brand deals)'] },
+  { icon:'🏗️', name:'Civil Engineer', tag:'Engineering', salary:'₹4L–₹20L', scope:'High', edu:'B.Tech Civil', years:'4 yrs',
+    desc:'Infrastructure, buildings, roads, bridges design karo. Government jobs bhi bahut hain.',
+    skills:['AutoCAD & STAAD','Structural Analysis','Project Management','Site Supervision'],
+    steps:['12th PCM','B.Tech Civil Engineering','GATE (for M.Tech/PSU)','PSU Jobs / Govt Contracts','Senior Engineer → PM → Director'] },
+  { icon:'🧪', name:'Pharmacist', tag:'Medical', salary:'₹3L–₹15L', scope:'High', edu:'B.Pharm / D.Pharm', years:'2–4 yrs',
+    desc:'Medicines ka expert bano. Hospitals, pharma companies aur retail mein jobs.',
+    skills:['Pharmacology','Chemistry','Patient Counseling','Quality Control'],
+    steps:['12th PCB','D.Pharm (2yr) or B.Pharm (4yr)','State Pharmacy Council Registration','Internship','Hospital / Retail / Industry jobs'] },
+  { icon:'🌱', name:'Environmental Scientist', tag:'Science', salary:'₹4L–₹15L', scope:'Growing', edu:'B.Sc / M.Sc Env Sci', years:'3–5 yrs',
+    desc:'Climate change aur environment ke liye kaam karo. Green jobs ka future bahut bright hai.',
+    skills:['Environmental Laws','GIS & Remote Sensing','Research Methods','Data Analysis'],
+    steps:['12th PCB/PCM','B.Sc Environmental Science','M.Sc (recommended)','NGO / Research Internship','Government / Consulting jobs'] },
+];
+
+const quizData = [
+  { q:'Aapko kya zyada pasand hai?', opts:['Computers aur technology','Logon ki help karna','Creative kaam karna','Numbers aur finance','Nature aur science'] },
+  { q:'Aap kaise kaam karna prefer karte hain?', opts:['Akele, focused kaam','Team ke saath','Log se milte hue','Bahar, field work','Research aur analysis'] },
+  { q:'School mein aapka favourite subject kya tha?', opts:['Maths aur Physics','Biology aur Chemistry','Art aur Hindi/English','History aur Economics','Sab mein theek tha'] },
+  { q:'Aapka dream lifestyle kaisa hai?', opts:['High salary + office job','Govt job + stability','Apna business / freelance','Travel + adventure','Impact society karna'] },
+  { q:'Aap problems kaise solve karte hain?', opts:['Logic aur data se','Empathy se samjhake','Creativity se naye tarike se','Experience aur gut feeling se','Research kar ke'] },
+  { q:'10 saal baad aap khud ko kahan dekhte hain?', opts:['MNC mein senior role','Govt officer','Apna successful startup','Famous creator / artist','Doctor / Scientist / Researcher'] },
+  { q:'Aapka sabse bada strength kya hai?', opts:['Technical skills','Communication','Creativity','Leadership','Patience aur detail'] },
+  { q:'Kitna risk aap le sakte hain career mein?', opts:['Low — stable job chahiye','Medium — balanced approach','High — entrepreneurship ready','Very high — passion follow karunga','Pata nahi abhi'] },
+  { q:'Aap subah uthke kya karna chahte hain?', opts:['Code likhna ya tech kaam','Patients dekhna ya counseling','Design ya content banana','Papers aur files handle karna','Research ya experiments'] },
+  { q:'Aapke liye career mein sabse important kya hai?', opts:['High salary','Job security','Creative freedom','Social impact','Work-life balance'] },
+];
+
+const quizResults = [
+  { title:'Tech Wizard! 💻', icon:'💻', desc:'Aapki strengths technology aur problem-solving mein hain. Software Engineering, Data Science, ya Cybersecurity aapke liye best fit hain!', tags:['Software Engineer','Data Scientist','AI/ML Engineer','Web Developer','Cybersecurity Analyst'] },
+  { title:'People Person! 🤝', icon:'🤝', desc:'Aap logon ke saath kaam mein best hain. Doctor, Psychologist, HR, ya Social Work aapko zyada satisfaction dega!', tags:['Doctor','Psychologist','HR Manager','Social Worker','Teacher/Professor'] },
+  { title:'Creative Soul! 🎨', icon:'🎨', desc:'Aapki creativity aapka sabse bada asset hai! UX Design, Content Creation, Film Making, ya Advertising — ek exciting creative career await kar raha hai!', tags:['UX/UI Designer','Content Creator','Film Maker','Graphic Designer','Copywriter'] },
+  { title:'Finance Guru! 📊', icon:'📊', desc:'Numbers aur finance mein aapki pakad strong hai! CA, CFA, Investment Banking, ya FinTech mein aapka future bright hai!', tags:['Chartered Accountant','Investment Banker','Financial Analyst','CFA','FinTech Professional'] },
+  { title:'Science Explorer! 🔬', icon:'🔬', desc:'Research aur discovery aapko excite karta hai! Environmental Science, Pharmacology, Biotechnology ya Research mein aapka dil lagega!', tags:['Research Scientist','Environmental Scientist','Pharmacist','Biotechnologist','Data Analyst'] },
+];
+
+const resources = {
+  'Technology': [
+    {ico:'🎥',name:'CS50 by Harvard',meta:'Free • Online • English',badge:'Free'},
+    {ico:'📱',name:'freeCodeCamp',meta:'Free • Web Development • Hindi tutorials available',badge:'Free'},
+    {ico:'🐍',name:'Python for Beginners – YouTube',meta:'Free • Corey Schafer / Tech With Tim',badge:'Free'},
+    {ico:'🎓',name:'Coursera — Google IT Support',meta:'Paid (Financial aid available) • 6 months',badge:'Certificate'},
+    {ico:'💡',name:'Apna College (YouTube)',meta:'Free • Hindi • DSA & Placements',badge:'Free'},
+  ],
+  'Medical': [
+    {ico:'📖',name:'NCERT Biology (11th–12th)',meta:'Free • Foundation for NEET',badge:'Free'},
+    {ico:'🏆',name:'Aakash Institute',meta:'Paid • NEET Coaching • Offline + Online',badge:'Top Coaching'},
+    {ico:'🎥',name:'Unacademy NEET',meta:'Free & Paid • Hindi & English',badge:'Popular'},
+    {ico:'📱',name:'Allen NEET App',meta:'Paid • Practice Tests & Solutions',badge:'Recommended'},
+  ],
+  'Finance': [
+    {ico:'📚',name:'ICAI Study Material',meta:'Free for registered students • CA Foundation',badge:'Official'},
+    {ico:'🎥',name:'CA Wallah (YouTube)',meta:'Free • Hindi • CA Foundation/Inter',badge:'Free'},
+    {ico:'📊',name:'Investopedia',meta:'Free • Finance concepts in simple language',badge:'Free'},
+    {ico:'🏆',name:'CFA Institute Resources',meta:'Paid • CFA Level 1/2/3 prep',badge:'Premium'},
+    {ico:'💡',name:'Finshots Newsletter',meta:'Free • Daily finance news • Simplified',badge:'Free'},
+  ],
+  'Government': [
+    {ico:'📰',name:'The Hindu Newspaper',meta:'₹299/month • Must for UPSC Current Affairs',badge:'Essential'},
+    {ico:'🎥',name:'Study IQ (YouTube)',meta:'Free • UPSC/SSC • Hindi & English',badge:'Free'},
+    {ico:'🏆',name:'Vision IAS',meta:'Paid • Top UPSC Coaching • Delhi + Online',badge:'Top Coaching'},
+    {ico:'📖',name:'NCERTs (6th–12th)',meta:'Free • Foundation for all Govt Exams',badge:'Free'},
+    {ico:'📱',name:'BYJU\'s Exam Prep',meta:'Free & Paid • SSC, Banking, UPSC tests',badge:'Popular'},
+  ],
+  'Creative': [
+    {ico:'🎨',name:'Canva Design School',meta:'Free • Graphic design basics',badge:'Free'},
+    {ico:'🖥️',name:'Figma Tutorial (YouTube)',meta:'Free • UI/UX Design • Mizko / DesignCourse',badge:'Free'},
+    {ico:'🎬',name:'Skillshare',meta:'Paid • Creative courses • Animation, Design',badge:'Premium'},
+    {ico:'🏆',name:'NID/NIFT Prep Materials',meta:'Paid • Design entrance preparation',badge:'Exam Prep'},
+  ],
+};
+
+const counselors = [
+  { name:'Priya Sharma', role:'IIT Delhi Alumna | Software Engineer @ Google', avatar:'👩', bg:'#7c3aed', exp:'8 years', rating:'⭐ 4.9', tags:['Tech Careers','Placements','FAANG Prep'], fee:'Free (1st session)' },
+  { name:'Rajesh Kumar', role:'IIM Ahmedabad | Management Consultant', avatar:'👨', bg:'#f97316', exp:'12 years', rating:'⭐ 4.8', tags:['MBA Guidance','Finance','Leadership'], fee:'₹499/session' },
+  { name:'Dr. Anita Verma', role:'AIIMS Doctor | Medical Career Coach', avatar:'👩‍⚕️', bg:'#10b981', exp:'15 years', rating:'⭐ 5.0', tags:['NEET','MBBS Abroad','Medical PG'], fee:'₹699/session' },
+  { name:'Arjun Mehta', role:'UPSC AIR 45 | IAS Officer', avatar:'👨‍💼', bg:'#3b82f6', exp:'10 years', rating:'⭐ 4.9', tags:['UPSC Strategy','Interview Prep','Current Affairs'], fee:'₹399/session' },
+  { name:'Sneha Patel', role:'NID Alumna | UX Designer @ Adobe', avatar:'👩‍🎨', bg:'#ec4899', exp:'7 years', rating:'⭐ 4.7', tags:['Design Careers','Portfolio Review','Freelancing'], fee:'₹299/session' },
+  { name:'Vikram Singh', role:'CA | Partner at Big 4 Firm', avatar:'👨‍💻', bg:'#eab308', exp:'18 years', rating:'⭐ 4.8', tags:['CA Guidance','Finance Careers','Articleship'], fee:'₹599/session' },
+];
+
+// ═══ STATE ═══
+let currentPage = 'home';
+let quizIndex = 0;
+let quizAnswers = [];
+let selectedCounselor = null;
+
+// ═══ SPLASH ═══
+setTimeout(()=>{
+  document.getElementById('splash').classList.add('hide');
+  setTimeout(()=>document.getElementById('splash').style.display='none', 700);
+}, 2500);
+
+// ═══ NAVIGATION ═══
+function goTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const navEl = document.getElementById('nav-'+page);
+  if(navEl) navEl.classList.add('active');
+  currentPage = page;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(page==='explore' && !document.getElementById('careerGrid').children.length) renderCareers();
+  if(page==='quiz') initQuiz();
+  if(page==='resources') renderResources();
+  if(page==='counseling') renderCounselors();
+}
+
+// ═══ CAREER EXPLORER ═══
+function renderCareers(){
+  const grid = document.getElementById('careerGrid');
+  grid.innerHTML = careers.map((c,i)=>`
+    <div class="career-card" onclick="showCareer(${i})">
+      <div class="icon">${c.icon}</div>
+      <div class="name">${c.name}</div>
+      <div class="tag">${c.tag}</div>
+    </div>
+  `).join('');
+}
+function showCareer(i){
+  const c = careers[i];
+  const d = document.getElementById('careerDetail');
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-icon">${c.icon}</div>
+      <div><div class="detail-title">${c.name}</div><div class="detail-sub">${c.desc}</div></div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-item-label">💰 Avg Salary</div><div class="detail-item-value">${c.salary}</div></div>
+      <div class="detail-item"><div class="detail-item-label">📈 Job Scope</div><div class="detail-item-value">${c.scope}</div></div>
+      <div class="detail-item"><div class="detail-item-label">🎓 Education</div><div class="detail-item-value">${c.edu}</div></div>
+      <div class="detail-item"><div class="detail-item-label">⏱️ Duration</div><div class="detail-item-value">${c.years}</div></div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div style="font-weight:700;color:#c4b5fd;margin-bottom:0.6rem">🛠️ Key Skills</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+        ${c.skills.map(s=>`<span class="result-tag">${s}</span>`).join('')}
+      </div>
+    </div>
+    <div class="roadmap">
+      <div class="roadmap-title">🗺️ Career Roadmap</div>
+      <div class="roadmap-steps">
+        ${c.steps.map((s,i)=>`<div class="roadmap-step"><div class="step-num">${i+1}</div><div>${s}</div></div>`).join('')}
+      </div>
+    </div>
+    <button class="btn-primary" style="margin-top:1.5rem;width:100%" onclick="goTo('counseling')">👨‍💼 Expert se Baat Karo</button>
+  `;
+  d.classList.add('show');
+  d.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function closeDetail(){ document.getElementById('careerDetail').classList.remove('show'); }
+
+// ═══ QUIZ ═══
+function initQuiz(){
+  quizIndex = 0; quizAnswers = [];
+  document.getElementById('quizResult').classList.remove('show');
+  renderQuiz();
+}
+function renderQuiz(){
+  const q = quizData[quizIndex];
+  const pct = (quizIndex/quizData.length)*100;
+  document.getElementById('quizBar').style.width = pct+'%';
+  document.getElementById('quizContainer').innerHTML = `
+    <div style="color:var(--muted);font-size:0.85rem;margin-bottom:0.8rem;font-weight:700">Question ${quizIndex+1} of ${quizData.length}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectOpt(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-nav">
+      <button class="back-btn" onclick="prevQ()" ${quizIndex===0?'style="opacity:0;pointer-events:none"':''}>← Previous</button>
+      <span style="color:var(--muted);font-size:0.85rem">${quizIndex+1}/${quizData.length}</span>
+    </div>
+  `;
+}
+function selectOpt(i){
+  quizAnswers[quizIndex] = i;
+  document.querySelectorAll('.quiz-opt').forEach((b,j)=>{
+    b.classList.toggle('selected', j===i);
+  });
+  setTimeout(()=>{ quizIndex<quizData.length-1 ? (quizIndex++, renderQuiz()) : showResult(); }, 400);
+}
+function prevQ(){ if(quizIndex>0){ quizIndex--; renderQuiz(); } }
+function showResult(){
+  document.getElementById('quizBar').style.width='100%';
+  document.getElementById('quizContainer').innerHTML = '';
+  // Tally answers
+  const tally = [0,0,0,0,0];
+  quizAnswers.forEach(a=>{ if(a!==undefined) tally[a%5]++; });
+  const best = tally.indexOf(Math.max(...tally));
+  const r = quizResults[best];
+  document.getElementById('quizResult').innerHTML = `
+    <div class="result-icon">${r.icon}</div>
+    <div class="result-title">${r.title}</div>
+    <div class="result-desc">${r.desc}</div>
+    <div class="result-tags">${r.tags.map(t=>`<span class="result-tag">${t}</span>`).join('')}</div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+      <button class="btn-primary" onclick="goTo('explore')">🗺️ Explore Careers</button>
+      <button class="btn-outline" onclick="goTo('counseling')">👨‍💼 Expert se Baat Karo</button>
+    </div>
+    <br/><button class="back-btn" onclick="initQuiz()" style="margin:1rem auto;display:block">🔄 Quiz Dobara Lo</button>
+  `;
+  document.getElementById('quizResult').classList.add('show');
+}
+
+// ═══ RESOURCES ═══
+let activeTab = 'Technology';
+function renderResources(){
+  const tabs = document.getElementById('resourceTabs');
+  const list = document.getElementById('resourceList');
+  if(!tabs.innerHTML){
+    tabs.innerHTML = Object.keys(resources).map(k=>`
+      <button class="tab-btn ${k===activeTab?'active':''}" onclick="switchTab('${k}')">${k}</button>
+    `).join('');
+  }
+  renderResourceList();
+}
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.textContent===tab));
+  renderResourceList();
+}
+function renderResourceList(){
+  const list = document.getElementById('resourceList');
+  list.innerHTML = (resources[activeTab]||[]).map(r=>`
+    <div class="resource-item">
+      <div class="resource-ico">${r.ico}</div>
+      <div>
+        <div class="resource-name">${r.name}</div>
+        <div class="resource-meta">${r.meta}</div>
+        <span class="resource-badge">${r.badge}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══ COUNSELORS ═══
+function renderCounselors(){
+  document.getElementById('counselorsGrid').innerHTML = counselors.map((c,i)=>`
+    <div class="counselor-card">
+      <div class="counselor-avatar" style="background:${c.bg}22;border-color:${c.bg}66">${c.avatar}</div>
+      <div class="counselor-name">${c.name}</div>
+      <div class="counselor-role">${c.role}</div>
+      <div class="counselor-tags">${c.tags.map(t=>`<span class="c-tag">${t}</span>`).join('')}</div>
+      <div class="c-rating">${c.rating} • ${c.exp} exp</div>
+      <div style="color:var(--muted);font-size:0.82rem;margin-top:0.3rem">${c.fee}</div>
+      <button class="btn-book" onclick="bookWith(${i})">📅 Session Book Karo</button>
+    </div>
+  `).join('');
+}
+function bookWith(i){
+  selectedCounselor = i;
+  const form = document.getElementById('bookingForm');
+  document.getElementById('successMsg').classList.remove('show');
+  form.classList.add('show');
+  form.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function closeBooking(){
+  document.getElementById('bookingForm').classList.remove('show');
+}
+function submitBooking(){
+  const name = document.getElementById('f-name').value;
+  const phone = document.getElementById('f-phone').value;
+  if(!name||!phone){ alert('Kripya naam aur phone number bharein!'); return; }
+  document.getElementById('successMsg').classList.add('show');
+  document.querySelector('.btn-submit').textContent = '✅ Confirmed!';
+  document.querySelector('.btn-submit').disabled = true;
+}
+</script>
+</body>
+</html>
